@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
+import { CodeModule } from './code/code.module';
 
 const MONGO_URI =
   process.env.MONGO_URI ||
@@ -21,6 +23,10 @@ const MONGO_URI =
     AuthModule,
 
     UserModule,
+
+    ProductModule,
+
+    CodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

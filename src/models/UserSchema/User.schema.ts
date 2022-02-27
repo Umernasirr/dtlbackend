@@ -1,16 +1,30 @@
 import mongoose from 'mongoose';
 
 import bcrypt = require('bcryptjs');
+import UserRole from 'src/common/enums/UserRole';
 
 const UserSchema = new mongoose.Schema({
   phoneNumber: {
-    type: String,
     unique: true,
+    type: String,
     required: true,
   },
   password: {
     type: String,
     required: true,
+  },
+  balance: {
+    type: Number,
+    default: 0,
+  },
+  status: {
+    type: Boolean,
+    default: false,
+  },
+  role: {
+    type: String,
+    enum: UserRole,
+    default: UserRole.USER,
   },
 });
 

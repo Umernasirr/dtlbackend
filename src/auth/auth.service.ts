@@ -4,7 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, userSchemaName } from 'src/models/UserSchema';
 import { JwtService } from '@nestjs/jwt';
-import sanitizeUser from 'src/utils/sanitizeUser';
+import sanitizeUser from 'src/common/utils/sanitizeUser';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +15,8 @@ export class AuthService {
     private jwtTokenService: JwtService,
   ) {}
 
-  async login(phoneNumber: string, password: string) {
+  async login(loginDto: LoginDto) {
+    const { phoneNumber, password } = loginDto;
     const userExists = await this.userModel.findOne({ phoneNumber });
 
     if (!userExists)
@@ -28,11 +31,11 @@ export class AuthService {
     }
   }
 
-  async createToken(user: User) {
+  async createToken(user: LoginDto) {
     return this.jwtTokenService.sign(user);
   }
 
-  async register(user: User) {
+  async register(user: RegisterDto) {
     const { phoneNumber } = user;
     const userExists = await this.userModel.findOne({ phoneNumber });
     if (userExists) {

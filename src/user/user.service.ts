@@ -2,14 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, userSchemaName } from 'src/models/UserSchema';
 import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-import sanitizeUser from 'src/utils/sanitizeUser';
+import sanitizeUser from 'src/common/utils/sanitizeUser';
+import { UpdateBalanceDto } from './dto/updateBalance.dto';
+import { UpdateStatusDto } from './dto/updateStatus.dto';
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectModel(userSchemaName) private userModel: Model<User>,
-    private jwtTokenService: JwtService,
-  ) {}
+  constructor(@InjectModel(userSchemaName) private userModel: Model<User>) {}
   async getAll() {
     const users = await this.userModel.find();
 
@@ -24,5 +22,48 @@ export class UserService {
       },
       status: HttpStatus.OK,
     };
+  }
+
+  async getUser(id: string) {
+    const user = await this.userModel.findById(id);
+
+    if (!user)
+      throw new HttpException('Users Not Found', HttpStatus.BAD_REQUEST);
+
+    const sanitizedUser = sanitizeUser(user);
+    return {
+      data: {
+        user: sanitizedUser,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+
+  async updateBalance(updateBalanceDto: UpdateBalanceDto) {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      updateBalanceDto.id,
+      {
+        balance: updateBalanceDto.balance,
+      },
+      {
+        new: true,
+      },
+    );
+
+    return updatedUser;
+  }
+
+  async updateStatus(updateStatusDto: UpdateStatusDto) {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      updateStatusDto.id,
+      {
+        status: updateStatusDto.status,
+      },
+      {
+        new: true,
+      },
+    );
+
+    return updatedUser;
   }
 }
