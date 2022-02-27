@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import UserSchema from './Code.schema';
+import CodeSchema from './Code.schema';
 
 export interface Code extends Document {
   status: boolean;
@@ -8,6 +8,6 @@ export interface Code extends Document {
   userId?: string;
 }
 
-export const userSchemaName = 'User';
+export const codeSchemaName = 'Code';
 
-export default UserSchema;
+export default CodeSchema;

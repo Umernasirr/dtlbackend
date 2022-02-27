@@ -40,17 +40,21 @@ export class UserService {
   }
 
   async updateBalance(updateBalanceDto: UpdateBalanceDto) {
-    const updatedUser = await this.userModel.findByIdAndUpdate(
-      updateBalanceDto.id,
-      {
-        balance: updateBalanceDto.balance,
-      },
-      {
-        new: true,
-      },
-    );
+    try {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        updateBalanceDto.id,
+        {
+          balance: updateBalanceDto.balance,
+        },
+        {
+          new: true,
+        },
+      );
 
-    return updatedUser;
+      return updatedUser;
+    } catch (e) {
+      throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async updateStatus(updateStatusDto: UpdateStatusDto) {
