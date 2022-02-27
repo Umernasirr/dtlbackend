@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import UserSchema from './User.schema';
+import UserSchema from './Code.schema';
 
 export interface Code extends Document {
   status: boolean;

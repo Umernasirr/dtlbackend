@@ -1,26 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Product, productSchemaName } from 'src/models/ProductSchema';
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
+  constructor(
+    @InjectModel(productSchemaName) private productModal: Model<Product>,
+  ) {}
 
-  findAll() {
-    return `This action returns all product`;
-  }
+  async getAll() {
+    const products = await this.productModal.find();
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+    if (!products) {
+      throw new HttpException('Products Not Found', HttpStatus.BAD_REQUEST);
+    }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+    return {
+      data: {
+        products,
+      },
+      status: HttpStatus.OK,
+    };
   }
 }
