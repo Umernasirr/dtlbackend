@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt-auth.strategy';
 
-export const SECRET_KEY = process.env.SECRET_KEY || 'umerkey';
+export const SECRET_KEY = process.env.SECRET_KEY;
 
 @Module({
   imports: [

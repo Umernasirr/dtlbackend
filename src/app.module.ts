@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,14 +11,12 @@ import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CodeModule } from './code/code.module';
 
-const MONGO_URI =
-  process.env.MONGO_URI ||
-  'mongodb+srv://umer:umer@cluster0.ecngt.mongodb.net/dtlapp?retryWrites=true&w=majority';
-
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(MONGO_URI, {
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
