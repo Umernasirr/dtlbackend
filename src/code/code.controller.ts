@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CodeService } from './code.service';
+import { AvailCodeDto } from './dto/availCode.dto';
 import { CreateCodeDto } from './dto/createCode.dto';
 import { CreateCodeBatchDto } from './dto/createCodeBatch.dto';
 
@@ -28,12 +29,12 @@ export class CodeController {
   }
 
   @Post('avail')
-  availCode(@Body() body) {
-    return this.codeService.availCode(body.codeId);
+  availCode(@Body() body: AvailCodeDto) {
+    return this.codeService.availCode(body.codeId, body.userId);
   }
 
   @Post('unavail')
-  unavailCode(@Body() body) {
+  unavailCode(@Body() body: AvailCodeDto) {
     return this.codeService.unavailCode(body.codeId);
   }
 }

@@ -29,7 +29,7 @@ export class CodeService {
           productId,
         },
       )
-      .select('status');
+      .select('status userId');
 
     return {
       data: {
@@ -90,10 +90,16 @@ export class CodeService {
     };
   }
 
-  async availCode(codeId: string) {
+  async availCode(codeId: string, userId: string) {
     if (!codeId)
       throw new HttpException(
         'Request Body must include codeId',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    if (!userId)
+      throw new HttpException(
+        'Request Body must include userId',
         HttpStatus.BAD_REQUEST,
       );
 
@@ -101,6 +107,7 @@ export class CodeService {
       codeId,
       {
         status: true,
+        userId,
       },
       {
         new: true,
@@ -126,9 +133,10 @@ export class CodeService {
       codeId,
       {
         status: false,
+        userId: null,
       },
       {
-        new: false,
+        new: true,
       },
     );
 
