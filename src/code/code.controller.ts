@@ -26,4 +26,14 @@ export class CodeController {
   createMultipleCode(@Body() createCodeBatchDto: CreateCodeBatchDto) {
     return this.codeService.createCodeBatch(createCodeBatchDto);
   }
+
+  @Post('avail')
+  availCode(@Body() body) {
+    return this.codeService.availCode(body.codeId);
+  }
+
+  @Post('unavail')
+  unavailCode(@Body() body) {
+    return this.codeService.unavailCode(body.codeId);
+  }
 }

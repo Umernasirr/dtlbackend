@@ -22,12 +22,14 @@ export class CodeService {
   }
 
   async getAllByProduct(productId: string) {
-    const codes = await this.codeModel.find(
-      {},
-      {
-        productId,
-      },
-    );
+    const codes = await this.codeModel
+      .find(
+        {},
+        {
+          productId,
+        },
+      )
+      .select('status');
 
     return {
       data: {
@@ -87,6 +89,54 @@ export class CodeService {
       status: HttpStatus.OK,
     };
   }
-}
 
-// u were creating code batch
+  async availCode(codeId: string) {
+    if (!codeId)
+      throw new HttpException(
+        'Request Body must include codeId',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const updatedCode = await this.codeModel.findByIdAndUpdate(
+      codeId,
+      {
+        status: true,
+      },
+      {
+        new: true,
+      },
+    );
+
+    return {
+      data: {
+        code: updatedCode,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+
+  async unavailCode(codeId: string) {
+    if (!codeId)
+      throw new HttpException(
+        'Request Body must include codeId',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const updatedCode = await this.codeModel.findByIdAndUpdate(
+      codeId,
+      {
+        status: false,
+      },
+      {
+        new: false,
+      },
+    );
+
+    return {
+      data: {
+        code: updatedCode,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+}
