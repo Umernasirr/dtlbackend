@@ -12,7 +12,7 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthService {
   constructor(
     @InjectModel(userSchemaName) private userModel: Model<User>,
-    private jwtTokenService: JwtService,
+    private jwtService: JwtService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   async createToken(user: LoginDto) {
-    return this.jwtTokenService.sign(user);
+    return this.jwtService.sign(user);
   }
 
   async register(user: RegisterDto) {
@@ -45,5 +45,22 @@ export class AuthService {
     const createdUser = new this.userModel(user);
     await createdUser.save();
     return sanitizeUser(createdUser);
+  }
+
+  async getMe(token: string) {
+    const jwt = token.replace('Bearer ', '');
+
+    const decodedToken = (await this.jwtService.decode(jwt, {
+      json: true,
+    })) as {
+      phoneNumber: string;
+      password: string;
+    };
+
+    const user = await this.userModel.findOne({
+      phoneNumber: decodedToken.phoneNumber,
+    });
+
+    return sanitizeUser(user);
   }
 }
