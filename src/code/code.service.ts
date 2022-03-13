@@ -4,10 +4,15 @@ import { Code, codeSchemaName } from 'src/models/CodeSchema';
 import { CreateCodeDto } from './dto/createCode.dto';
 import { Model } from 'mongoose';
 import { CreateCodeBatchDto } from './dto/createCodeBatch.dto';
+import { Product, productSchemaName } from 'src/models/ProductSchema';
+import { User, userSchemaName } from 'src/models/UserSchema';
 @Injectable()
 export class CodeService {
   constructor(
     @InjectModel(codeSchemaName) private readonly codeModel: Model<Code>,
+    @InjectModel(productSchemaName)
+    private readonly productModel: Model<Product>,
+    @InjectModel(userSchemaName) private readonly userModel: Model<User>,
   ) {}
 
   async getAll() {
@@ -127,8 +132,24 @@ export class CodeService {
       },
     );
 
+    const productId = codeId.split('-')[0];
+
+    const product = await this.productModel.findById(productId);
+
+    const user = await this.userModel.findById(userId);
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        balance: user.balance + product.price,
+      },
+      {
+        new: true,
+      },
+    );
+
     return {
       data: {
+        user: updatedUser,
         code: updatedCode,
       },
       status: HttpStatus.OK,
