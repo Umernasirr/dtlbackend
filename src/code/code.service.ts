@@ -29,7 +29,7 @@ export class CodeService {
           productId,
         },
       )
-      .select('status userId');
+      .select('status userId codeId');
 
     return {
       data: {
@@ -103,8 +103,21 @@ export class CodeService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const updatedCode = await this.codeModel.findByIdAndUpdate(
+    //  check if code is already availed
+    const code = await this.codeModel.findOne({
       codeId,
+    });
+
+    if (code.status)
+      throw new HttpException(
+        'Code is Already Availed',
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const updatedCode = await this.codeModel.findOneAndUpdate(
+      {
+        codeId,
+      },
       {
         status: true,
         userId,
@@ -129,8 +142,10 @@ export class CodeService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const updatedCode = await this.codeModel.findByIdAndUpdate(
-      codeId,
+    const updatedCode = await this.codeModel.findOneAndUpdate(
+      {
+        codeId,
+      },
       {
         status: false,
         userId: null,

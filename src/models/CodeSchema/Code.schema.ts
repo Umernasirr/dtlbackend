@@ -15,11 +15,24 @@ const CodeSchema = new mongoose.Schema({
     ref: productSchemaName,
   },
 
+  codeId: {
+    type: String,
+  },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: userSchemaName,
     default: null,
   },
+});
+
+CodeSchema.pre('save', async function () {
+  try {
+    const codeId = this.productId + '-' + this._id;
+    this['codeId'] = codeId;
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 export default CodeSchema;

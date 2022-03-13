@@ -4,8 +4,9 @@ import CodeSchema from './Code.schema';
 
 export interface Code extends Document {
   status: boolean;
-  productId?: string;
+  productId: string;
   userId?: string;
+  codeId?: string;
 }
 
 export const codeSchemaName = 'Code';
