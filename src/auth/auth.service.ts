@@ -61,6 +61,13 @@ export class AuthService {
       phoneNumber: decodedToken.phoneNumber,
     });
 
-    return sanitizeUser(user);
+    const updatedToken = await this.createToken({
+      phoneNumber: decodedToken.phoneNumber,
+      password: decodedToken.password,
+    });
+
+    const sanitizedUser = sanitizeUser(user);
+
+    return { user: sanitizedUser, token: updatedToken };
   }
 }

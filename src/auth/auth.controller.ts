@@ -46,10 +46,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('me')
-  async getMe(@Headers('Authorization') token: string) {
-    const user = await this.authService.getMe(token);
+  async getMe(@Headers('Authorization') authToken: string) {
+    const { user, token } = await this.authService.getMe(authToken);
 
-    console.log(user);
     return {
       data: {
         user,
