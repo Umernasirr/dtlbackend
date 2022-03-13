@@ -5,6 +5,7 @@ import UserSchema from './User.schema';
 export interface User extends Document {
   phoneNumber: string;
   password: string;
+  name: string;
 }
 
 export const userSchemaName = 'User';

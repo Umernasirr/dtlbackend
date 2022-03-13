@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   balance: {
     type: Number,
     default: 0,
@@ -35,6 +39,7 @@ UserSchema.pre('save', async function (next: any) {
     }
     const hashed = bcrypt.hashSync(this['password'], 10);
     this['password'] = hashed;
+
     return next();
   } catch (err) {
     return next(err);
