@@ -30,8 +30,8 @@ CodeSchema.pre('save', async function () {
   try {
     const codeId = this.productId + '-' + this._id;
     this['codeId'] = codeId;
-  } catch (err) {
-    console.log(err);
+  } catch (e) {
+    console.log(e);
   }
 });
 
