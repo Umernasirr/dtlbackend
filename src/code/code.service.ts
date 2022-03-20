@@ -157,7 +157,6 @@ export class CodeService {
       price: product.price,
     });
 
-    console.log(transaction);
     await transaction.save();
 
     return {

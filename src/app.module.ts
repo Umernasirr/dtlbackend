@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CodeModule } from './code/code.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -28,6 +29,8 @@ import { CodeModule } from './code/code.module';
     ProductModule,
 
     CodeModule,
+
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
