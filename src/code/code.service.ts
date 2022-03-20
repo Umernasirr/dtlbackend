@@ -6,6 +6,10 @@ import { Model } from 'mongoose';
 import { CreateCodeBatchDto } from './dto/createCodeBatch.dto';
 import { Product, productSchemaName } from 'src/models/ProductSchema';
 import { User, userSchemaName } from 'src/models/UserSchema';
+import {
+  Transaction,
+  transactionSchemaName,
+} from 'src/models/TransactionSchema';
 @Injectable()
 export class CodeService {
   constructor(
@@ -13,6 +17,8 @@ export class CodeService {
     @InjectModel(productSchemaName)
     private readonly productModel: Model<Product>,
     @InjectModel(userSchemaName) private readonly userModel: Model<User>,
+    @InjectModel(transactionSchemaName)
+    private readonly transactionModal: Model<Transaction>,
   ) {}
 
   async getAll() {
@@ -114,10 +120,7 @@ export class CodeService {
     });
 
     if (code.status)
-      throw new HttpException(
-        'Code is Already Availed',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Code is Already Availed', HttpStatus.OK);
 
     const updatedCode = await this.codeModel.findOneAndUpdate(
       {
@@ -147,10 +150,21 @@ export class CodeService {
       },
     );
 
+    const transaction = new this.transactionModal({
+      userId,
+      productName: product.name,
+      codeId,
+      price: product.price,
+    });
+
+    console.log(transaction);
+    await transaction.save();
+
     return {
       data: {
         user: updatedUser,
         code: updatedCode,
+        transaction: transaction,
       },
       status: HttpStatus.OK,
     };
