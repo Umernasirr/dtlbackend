@@ -20,9 +20,13 @@ export class TransactionService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const transactions = await this.transactionModel.find({
-      userId,
-    });
+    const transactions = await this.transactionModel
+      .find({
+        userId,
+      })
+      .sort({
+        createdAt: -1,
+      });
 
     if (!transactions)
       throw new HttpException('Transactions Not Found', HttpStatus.OK);
