@@ -8,25 +8,21 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   getAll() {
     return this.userService.getAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch('updateBalance')
   updateBalance(@Body() updateBalanceDto: UpdateBalanceDto) {
     return this.userService.updateBalance(updateBalanceDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch('updateStatus')
   updateStatus(@Body() updateStatusDto: UpdateStatusDto) {
     return this.userService.updateStatus(updateStatusDto);

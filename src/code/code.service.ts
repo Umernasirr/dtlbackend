@@ -89,6 +89,7 @@ export class CodeService {
 
     for (let i = 0; i < count; i++) {
       const code = new this.codeModel(createCodeDto);
+      code.codeId = `${productId}-${code.id}`;
       codes.push(code);
       code.save();
     }
@@ -105,13 +106,13 @@ export class CodeService {
     if (!codeId)
       throw new HttpException(
         'Request Body must include codeId',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.OK,
       );
 
     if (!userId)
       throw new HttpException(
         'Request Body must include userId',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.OK,
       );
 
     //  check if code is already availed
