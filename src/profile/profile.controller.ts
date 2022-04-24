@@ -13,12 +13,9 @@ export class ProfileController {
     return await this.profileService.getAll();
   }
 
-  @Get('by-id/:clientId/:userId')
-  async getAllByUser(
-    @Param('clientId') clientId: string,
-    @Param('userId') userId: string,
-  ) {
-    return await this.profileService.getAllByUser(clientId, userId);
+  @Get('by-id/:userId')
+  async getAllByUser(@Param('userId') userId: string) {
+    return await this.profileService.getAllByUser(userId);
   }
 
   @Post('create')

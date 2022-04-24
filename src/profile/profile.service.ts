@@ -32,16 +32,10 @@ export class ProfileService {
     };
   }
 
-  async getAllByUser(clientId: string, userId: string) {
+  async getAllByUser(userId: string) {
     if (!userId)
       throw new HttpException(
         'userId must be provided in body',
-        HttpStatus.BAD_REQUEST,
-      );
-
-    if (!clientId)
-      throw new HttpException(
-        'clientId must be provided in body',
         HttpStatus.BAD_REQUEST,
       );
 
