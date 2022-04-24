@@ -157,8 +157,8 @@ export class CodeService {
       profileId,
     });
 
-    const updatedProfile = await this.userModel.findByIdAndUpdate(
-      userId,
+    const updatedProfile = await this.profileModel.findByIdAndUpdate(
+      profileId,
       {
         balance: profile.balance + product.price,
       },
