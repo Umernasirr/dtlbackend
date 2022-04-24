@@ -109,7 +109,13 @@ export class CodeService {
     };
   }
 
-  async availCode(codeId: string, userId: string) {
+  async availCode(profileId: string, userId: string, codeId: string) {
+    if (!profileId)
+      throw new HttpException(
+        'Request Body must include profileId',
+        HttpStatus.OK,
+      );
+
     if (!codeId)
       throw new HttpException(
         'Request Body must include codeId',
@@ -148,8 +154,9 @@ export class CodeService {
     const product = await this.productModel.findById(productId);
 
     const profile = await this.profileModel.findOne({
-      userId,
+      profileId,
     });
+
     const updatedProfile = await this.userModel.findByIdAndUpdate(
       userId,
       {

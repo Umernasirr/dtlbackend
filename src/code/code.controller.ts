@@ -30,7 +30,7 @@ export class CodeController {
 
   @Post('avail')
   availCode(@Body() body: AvailCodeDto) {
-    return this.codeService.availCode(body.codeId, body.userId);
+    return this.codeService.availCode(body.profileId, body.userId, body.codeId);
   }
 
   @Post('unavail')
