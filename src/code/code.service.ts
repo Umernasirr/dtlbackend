@@ -149,6 +149,8 @@ export class CodeService {
       },
     );
 
+    const clientId = codeId.split('-')[0];
+
     const productId = codeId.split('-')[1];
 
     const product = await this.productModel.findById(productId);
@@ -157,6 +159,8 @@ export class CodeService {
       profileId,
     });
 
+    if (profile.clientId.toString() !== clientId)
+      throw new HttpException('Client Id does not match', HttpStatus.OK);
     const updatedProfile = await this.profileModel.findByIdAndUpdate(
       profileId,
       {
