@@ -6,7 +6,8 @@ export interface Code extends Document {
   status: boolean;
   productId: string;
   userId?: string;
-  codeId?: string;
+  codeId: string;
+  clientId: string;
 }
 
 export const codeSchemaName = 'Code';

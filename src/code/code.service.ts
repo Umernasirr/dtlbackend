@@ -10,6 +10,9 @@ import {
   Transaction,
   transactionSchemaName,
 } from 'src/models/TransactionSchema';
+import bcrypt = require('bcryptjs');
+import { Profile, profileSchemaName } from 'src/models/ProfileSchema';
+
 @Injectable()
 export class CodeService {
   constructor(
@@ -17,6 +20,8 @@ export class CodeService {
     @InjectModel(productSchemaName)
     private readonly productModel: Model<Product>,
     @InjectModel(userSchemaName) private readonly userModel: Model<User>,
+    @InjectModel(profileSchemaName)
+    private readonly profileModel: Model<Profile>,
     @InjectModel(transactionSchemaName)
     private readonly transactionModal: Model<Transaction>,
   ) {}
@@ -72,7 +77,7 @@ export class CodeService {
   }
 
   createCodeBatch(createCodeDto: CreateCodeBatchDto) {
-    const { productId, count } = createCodeDto;
+    const { productId, count, clientId } = createCodeDto;
 
     if (!productId)
       throw new HttpException(
@@ -89,7 +94,9 @@ export class CodeService {
 
     for (let i = 0; i < count; i++) {
       const code = new this.codeModel(createCodeDto);
-      code.codeId = `${productId}-${code.id}`;
+      const codeId = `${clientId}-${productId}-${code.id}`;
+      code.codeId = codeId;
+
       codes.push(code);
       code.save();
     }
@@ -120,7 +127,7 @@ export class CodeService {
       codeId,
     });
 
-    if (code.status)
+    if (code?.status)
       throw new HttpException('Code is Already Availed', HttpStatus.OK);
 
     const updatedCode = await this.codeModel.findOneAndUpdate(
@@ -136,15 +143,17 @@ export class CodeService {
       },
     );
 
-    const productId = codeId.split('-')[0];
+    const productId = codeId.split('-')[1];
 
     const product = await this.productModel.findById(productId);
 
-    const user = await this.userModel.findById(userId);
-    const updatedUser = await this.userModel.findByIdAndUpdate(
+    const profile = await this.profileModel.findOne({
+      userId,
+    });
+    const updatedProfile = await this.userModel.findByIdAndUpdate(
       userId,
       {
-        balance: user.balance + product.price,
+        balance: profile.balance + product.price,
       },
       {
         new: true,
@@ -162,7 +171,7 @@ export class CodeService {
 
     return {
       data: {
-        user: updatedUser,
+        profile: updatedProfile,
         code: updatedCode,
         transaction: transaction,
       },

@@ -11,6 +11,8 @@ import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { CodeModule } from './code/code.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { ClientModule } from './client/client.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -31,6 +33,10 @@ import { TransactionModule } from './transaction/transaction.module';
     CodeModule,
 
     TransactionModule,
+
+    ClientModule,
+
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

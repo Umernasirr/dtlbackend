@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import bcrypt = require('bcryptjs');
 
+import { clientSchemaName } from '../ClientSchema';
 import { productSchemaName } from '../ProductSchema';
 import { userSchemaName } from '../UserSchema';
 
@@ -13,6 +15,7 @@ const CodeSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: productSchemaName,
+    required: true,
   },
 
   codeId: {
@@ -24,11 +27,16 @@ const CodeSchema = new mongoose.Schema({
     ref: userSchemaName,
     default: null,
   },
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: clientSchemaName,
+    required: true,
+  },
 });
 
 CodeSchema.pre('save', async function () {
   try {
-    const codeId = this.productId + '-' + this._id;
+    const codeId = `${this.clientId}-${this.productId}-${this._id}`;
     this['codeId'] = codeId;
   } catch (e) {
     console.log(e);
