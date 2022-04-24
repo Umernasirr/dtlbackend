@@ -82,9 +82,13 @@ export class ProfileService {
     if (!profile)
       throw new HttpException('Profile Not Created', HttpStatus.NO_CONTENT);
 
+    const profiles = await this.profileModel.find({
+      userId,
+    });
+
     return {
       data: {
-        profile,
+        profiles,
       },
       status: HttpStatus.OK,
     };
