@@ -20,7 +20,11 @@ export class AuthService {
     const userExists = await this.userModel.findOne({ phoneNumber });
 
     if (!userExists)
-      throw new HttpException('User Not Found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Account not found', HttpStatus.BAD_REQUEST);
+
+    if (!userExists.status) {
+      throw new HttpException('Account is not active', HttpStatus.BAD_REQUEST);
+    }
 
     const passwordMatches = bcrypt.compareSync(password, userExists.password);
 
