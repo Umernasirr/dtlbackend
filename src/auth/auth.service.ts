@@ -32,7 +32,9 @@ export class AuthService {
   }
 
   async createToken(user: LoginDto) {
-    return this.jwtService.sign(user);
+    return this.jwtService.sign(user, {
+      expiresIn: '10s',
+    });
   }
 
   async register(user: RegisterDto) {
