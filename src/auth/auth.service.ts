@@ -33,7 +33,7 @@ export class AuthService {
 
   async createToken(user: LoginDto) {
     return this.jwtService.sign(user, {
-      expiresIn: '10s',
+      expiresIn: '365d',
     });
   }
 
