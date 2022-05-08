@@ -11,6 +11,11 @@ export class UserController {
     return this.userService.getAll();
   }
 
+  @Get('active')
+  getAllActive() {
+    return this.userService.getAllActive();
+  }
+
   @Get('/:id')
   getUser(@Param('id') id: string) {
     return this.userService.getUser(id);

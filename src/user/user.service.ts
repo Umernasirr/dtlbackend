@@ -23,6 +23,23 @@ export class UserService {
     };
   }
 
+  async getAllActive() {
+    const users = await this.userModel.find({
+      status: true,
+    });
+
+    if (!users)
+      throw new HttpException('Users Not Found', HttpStatus.BAD_REQUEST);
+
+    const sanitizedUsers = users.map((user) => sanitizeUser(user));
+
+    return {
+      data: {
+        users: sanitizedUsers,
+      },
+      status: HttpStatus.OK,
+    };
+  }
   async getUser(id: string) {
     const user = await this.userModel.findById(id);
 

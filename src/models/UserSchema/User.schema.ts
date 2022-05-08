@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     enum: UserRole,
     default: UserRole.USER,
   },
+  status: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 UserSchema.pre('save', async function (next: any) {

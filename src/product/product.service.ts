@@ -2,16 +2,22 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, productSchemaName } from 'src/models/ProductSchema';
+import {
+  Transaction,
+  transactionSchemaName,
+} from 'src/models/TransactionSchema';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectModel(productSchemaName) private productModal: Model<Product>,
+    @InjectModel(productSchemaName) private productModel: Model<Product>,
+    @InjectModel(transactionSchemaName)
+    private transactionModel: Model<Transaction>,
   ) {}
 
   async getAll() {
-    const products = await this.productModal.find();
+    const products = await this.productModel.find();
 
     if (!products) {
       throw new HttpException('Products Not Found', HttpStatus.BAD_REQUEST);
@@ -26,7 +32,7 @@ export class ProductService {
   }
 
   async getProduct(id: string) {
-    const product = await this.productModal.findById(id);
+    const product = await this.productModel.findById(id);
 
     if (!product) {
       throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);
@@ -56,14 +62,14 @@ export class ProductService {
       );
     }
 
-    const productExists = await this.productModal.findOne({ name });
+    const productExists = await this.productModel.findOne({ name });
     if (productExists) {
       throw new HttpException(
         'Product With Same Name Already Exists',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const createdProduct = new this.productModal(createProductDto);
+    const createdProduct = new this.productModel(createProductDto);
 
     createdProduct.save();
     return {
@@ -77,9 +83,9 @@ export class ProductService {
   async updateProduct(updateProductDto: UpdateProductDto) {
     const { id, name, price } = updateProductDto;
 
-    const existingProduct = await this.productModal.findById(id);
+    const existingProduct = await this.productModel.findById(id);
     try {
-      const updatedProduct = await this.productModal.findByIdAndUpdate(
+      const updatedProduct = await this.productModel.findByIdAndUpdate(
         id,
         {
           name: name || existingProduct.name,

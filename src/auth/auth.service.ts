@@ -50,9 +50,9 @@ export class AuthService {
   async getMe(token: string) {
     const jwt = token.replace('Bearer ', '');
 
-    const decodedToken = (await this.jwtService.decode(jwt, {
+    const decodedToken = this.jwtService.decode(jwt, {
       json: true,
-    })) as {
+    }) as {
       phoneNumber: string;
       password: string;
     };

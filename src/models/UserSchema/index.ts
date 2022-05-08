@@ -7,7 +7,7 @@ export interface User extends Document {
   phoneNumber: string;
   password: string;
   name: string;
-  balance: number;
+  status: boolean;
   role: UserRole;
 }
 
