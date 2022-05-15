@@ -9,6 +9,7 @@ export interface User extends Document {
   name: string;
   status: boolean;
   role: UserRole;
+  location: string;
 }
 
 export const userSchemaName = 'User';

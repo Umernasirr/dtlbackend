@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
 
+  location: {
+    type: String,
+    required: true,
+  },
   role: {
     type: String,
     enum: UserRole,
