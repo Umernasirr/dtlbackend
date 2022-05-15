@@ -7,6 +7,7 @@ export interface Code extends Document {
   productId: string;
   userId?: string;
   codeId: string;
+  hashedCodeId: string;
   clientId: string;
 }
 

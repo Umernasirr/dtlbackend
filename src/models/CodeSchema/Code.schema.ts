@@ -21,6 +21,9 @@ const CodeSchema = new mongoose.Schema({
   codeId: {
     type: String,
   },
+  hashedCodeId: {
+    type: String,
+  },
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +40,9 @@ const CodeSchema = new mongoose.Schema({
 CodeSchema.pre('save', async function () {
   try {
     const codeId = `${this.clientId}-${this.productId}-${this._id}`;
+    const hashedCodeId = bcrypt.hashSync(codeId, 10);
+
+    this['hashedCodeId'] = hashedCodeId;
     this['codeId'] = codeId;
   } catch (e) {
     console.log(e);

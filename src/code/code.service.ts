@@ -45,7 +45,7 @@ export class CodeService {
           productId,
         },
       )
-      .select('status userId codeId');
+      .select('status userId codeId hashedCodeId');
 
     return {
       data: {
@@ -96,7 +96,7 @@ export class CodeService {
       const code = new this.codeModel(createCodeDto);
       const codeId = `${clientId}-${productId}-${code.id}`;
       code.codeId = codeId;
-
+      code.hashedCodeId = bcrypt.hashSync(codeId, 10);
       codes.push(code);
       code.save();
     }
@@ -130,7 +130,7 @@ export class CodeService {
 
     //  check if code is already availed
     const code = await this.codeModel.findOne({
-      codeId,
+      hashedCodeId: codeId,
     });
 
     if (code?.status)
@@ -138,7 +138,7 @@ export class CodeService {
 
     const updatedCode = await this.codeModel.findOneAndUpdate(
       {
-        codeId,
+        hashedCodeId: codeId,
       },
       {
         status: true,
@@ -149,9 +149,9 @@ export class CodeService {
       },
     );
 
-    const clientId = codeId.split('-')[0];
+    const clientId = code.codeId.split('-')[0];
 
-    const productId = codeId.split('-')[1];
+    const productId = code.codeId.split('-')[1];
 
     const product = await this.productModel.findById(productId);
 
@@ -173,7 +173,7 @@ export class CodeService {
     const transaction = new this.transactionModal({
       userId,
       productName: product.name,
-      codeId,
+      codeId: code.codeId,
       price: product.price,
     });
 
@@ -198,7 +198,7 @@ export class CodeService {
 
     const updatedCode = await this.codeModel.findOneAndUpdate(
       {
-        codeId,
+        hashedCodeId: codeId,
       },
       {
         status: false,
@@ -208,6 +208,10 @@ export class CodeService {
         new: true,
       },
     );
+
+    if (!updatedCode) {
+      throw new HttpException('Code not found', HttpStatus.BAD_REQUEST);
+    }
 
     return {
       data: {
