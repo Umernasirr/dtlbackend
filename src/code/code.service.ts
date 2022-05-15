@@ -161,11 +161,10 @@ export class CodeService {
 
     if (profile.clientId.toString() !== clientId)
       throw new HttpException('Client Id does not match', HttpStatus.OK);
+
     const updatedProfile = await this.profileModel.findByIdAndUpdate(
       profileId,
-      {
-        balance: profile.balance + product.price,
-      },
+      { $inc: { balance: product.price } },
       {
         new: true,
       },
