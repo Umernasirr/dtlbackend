@@ -76,7 +76,7 @@ export class CodeService {
     };
   }
 
-  createCodeBatch(createCodeDto: CreateCodeBatchDto) {
+  async createCodeBatch(createCodeDto: CreateCodeBatchDto) {
     const { productId, count, clientId } = createCodeDto;
 
     if (!productId)
@@ -94,11 +94,8 @@ export class CodeService {
 
     for (let i = 0; i < count; i++) {
       const code = new this.codeModel(createCodeDto);
-      const codeId = `${clientId}-${productId}-${code.id}`;
-      code.codeId = codeId;
-      code.hashedCodeId = bcrypt.hashSync(codeId, 10);
-      codes.push(code);
-      code.save();
+      const newCode = await code.save();
+      codes.push(newCode);
     }
 
     return {
@@ -128,10 +125,13 @@ export class CodeService {
         HttpStatus.OK,
       );
 
-    //  check if code is already availed
     const code = await this.codeModel.findOne({
       hashedCodeId: codeId,
     });
+
+    if (!code) {
+      throw new HttpException('Code not found', HttpStatus.NOT_FOUND);
+    }
 
     if (code?.status)
       throw new HttpException('Code is Already Availed', HttpStatus.OK);
