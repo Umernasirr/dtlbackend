@@ -94,6 +94,7 @@ export class CodeService {
 
     for (let i = 0; i < count; i++) {
       const code = new this.codeModel(createCodeDto);
+
       const newCode = await code.save();
       codes.push(newCode);
     }
