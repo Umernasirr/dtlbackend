@@ -5,37 +5,42 @@ import { clientSchemaName } from '../ClientSchema';
 import { productSchemaName } from '../ProductSchema';
 import { userSchemaName } from '../UserSchema';
 
-const CodeSchema = new mongoose.Schema({
-  status: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+const CodeSchema = new mongoose.Schema(
+  {
+    status: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
 
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: productSchemaName,
-    required: true,
-  },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: productSchemaName,
+      required: true,
+    },
 
-  codeId: {
-    type: String,
-  },
-  hashedCodeId: {
-    type: String,
-  },
+    codeId: {
+      type: String,
+    },
+    hashedCodeId: {
+      type: String,
+    },
 
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: userSchemaName,
-    default: null,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: userSchemaName,
+      default: null,
+    },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: clientSchemaName,
+      required: true,
+    },
   },
-  clientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: clientSchemaName,
-    required: true,
+  {
+    timestamps: true,
   },
-});
+);
 
 CodeSchema.pre('save', async function () {
   try {
