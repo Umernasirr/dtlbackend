@@ -5,7 +5,10 @@ import ProfileSchema from './Profile.schema';
 export interface Profile extends Document {
   userId: string;
   balance: number;
-  clientId: string;
+  client: {
+    _id: string;
+    name: string;
+  };
   status: boolean;
 }
 

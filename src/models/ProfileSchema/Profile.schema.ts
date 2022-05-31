@@ -9,7 +9,7 @@ const ProfileSchema = new mongoose.Schema({
     required: true,
   },
 
-  clientId: {
+  client: {
     type: mongoose.Schema.Types.ObjectId,
     ref: clientSchemaName,
     required: true,
