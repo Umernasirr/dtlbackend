@@ -20,7 +20,7 @@ export class ProfileService {
   ) {}
 
   async getAll() {
-    const profiles = await this.profileModel.find().populate('clientId');
+    const profiles = await this.profileModel.find().populate('client');
     if (!profiles)
       throw new HttpException('Profiles Not Found', HttpStatus.NO_CONTENT);
 
@@ -43,7 +43,7 @@ export class ProfileService {
       .find({
         userId,
       })
-      .populate('clientId');
+      .populate('client');
 
     if (!profiles)
       throw new HttpException('Profiles Not Found', HttpStatus.NO_CONTENT);
@@ -88,7 +88,7 @@ export class ProfileService {
       .find({
         userId,
       })
-      .populate('clientId');
+      .populate('client');
 
     return {
       data: {
@@ -110,7 +110,7 @@ export class ProfileService {
             new: true,
           },
         )
-        .populate('clientId');
+        .populate('client');
       return updatedProfile;
     } catch (e) {
       throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);
@@ -129,7 +129,7 @@ export class ProfileService {
             new: true,
           },
         )
-        .populate('clientId');
+        .populate('client');
       return updatedProfile;
     } catch (e) {
       throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);

@@ -160,7 +160,7 @@ export class CodeService {
       profileId,
     });
 
-    if (profile.clientId.toString() !== clientId)
+    if (profile.client._id.toString() !== clientId)
       throw new HttpException('Client Id does not match', HttpStatus.OK);
 
     const updatedProfile = await this.profileModel.findByIdAndUpdate(
