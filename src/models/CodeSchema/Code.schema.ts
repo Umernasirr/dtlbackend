@@ -42,15 +42,19 @@ const CodeSchema = new mongoose.Schema(
   },
 );
 
-CodeSchema.pre('save', async function () {
+CodeSchema.pre('insertMany', function (next, docs) {
   try {
-    const codeId = `${this.clientId}-${this.productId}-${this._id}`;
-    const hashedCodeId = bcrypt.hashSync(codeId, 1);
-    this['hashedCodeId'] = hashedCodeId;
-    this['codeId'] = codeId;
+    docs.map((code) => {
+      const codeId = `${code.clientId}-${code.productId}-${code._id}`;
+      const hashedCodeId = bcrypt.hashSync(codeId, 1);
+      code['hashedCodeId'] = hashedCodeId;
+      code['codeId'] = codeId;
+    });
   } catch (e) {
     console.log(e);
   }
+
+  next();
 });
 
 export default CodeSchema;
