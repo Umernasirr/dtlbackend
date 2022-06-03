@@ -105,6 +105,7 @@ export class ProfileService {
           updateBalanceDto.id,
           {
             balance: updateBalanceDto.balance,
+            note: updateBalanceDto.note,
           },
           {
             new: true,

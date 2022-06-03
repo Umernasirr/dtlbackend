@@ -23,6 +23,9 @@ const ProfileSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    note: {
+      type: String,
+    },
   },
   {
     timestamps: true,

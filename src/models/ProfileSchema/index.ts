@@ -10,6 +10,7 @@ export interface Profile extends Document {
     name: string;
   };
   status: boolean;
+  note: string;
 }
 
 export const profileSchemaName = 'profile';
