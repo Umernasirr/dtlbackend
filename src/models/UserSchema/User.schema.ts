@@ -22,6 +22,22 @@ const UserSchema = new mongoose.Schema(
     location: {
       type: String,
     },
+    mechanic: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    shopNo: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
       enum: UserRole,

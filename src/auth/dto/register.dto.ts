@@ -8,4 +8,6 @@ export class RegisterDto {
   balance?: number;
   status?: boolean;
   role?: UserRole;
+  email?: string;
+  city: string;
 }
