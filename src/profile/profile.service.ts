@@ -57,10 +57,10 @@ export class ProfileService {
   }
 
   async createProfile(createProfileDto: CreateProfileDto) {
-    const { clientId, userId } = createProfileDto;
-    if (!clientId)
+    const { client, userId } = createProfileDto;
+    if (!client)
       throw new HttpException(
-        'clientId must be provided in body',
+        'client must be provided in body',
         HttpStatus.BAD_REQUEST,
       );
 
@@ -71,7 +71,7 @@ export class ProfileService {
       );
 
     const existingProfile = await this.profileModel.findOne({
-      clientId,
+      client,
       userId,
     });
 
@@ -79,7 +79,7 @@ export class ProfileService {
       throw new ConflictException('Profile already exists');
     }
 
-    const profile = await new this.profileModel({ clientId, userId }).save(); // create new profile
+    const profile = await new this.profileModel({ client, userId }).save(); // create new profile
 
     if (!profile)
       throw new HttpException('Profile Not Created', HttpStatus.NO_CONTENT);
