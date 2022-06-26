@@ -28,13 +28,12 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
     },
     city: {
       type: String,
       required: true,
     },
-    shopNo: {
+    shopName: {
       type: String,
       required: true,
     },
