@@ -131,6 +131,19 @@ export class CodeService {
       hashedCodeId: codeId,
     });
 
+    const clientId = code.codeId.split('-')[0];
+
+    const productId = code.codeId.split('-')[1];
+
+    const pf = await this.profileModel.findById(profileId);
+
+    if (pf.client._id.toString() !== clientId) {
+      throw new HttpException(
+        'Code is of the wrong profile',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     if (!code) {
       throw new HttpException('Code not found', HttpStatus.NOT_FOUND);
     }
@@ -150,10 +163,6 @@ export class CodeService {
         new: true,
       },
     );
-
-    const clientId = code.codeId.split('-')[0];
-
-    const productId = code.codeId.split('-')[1];
 
     const product = await this.productModel.findById(productId);
 
