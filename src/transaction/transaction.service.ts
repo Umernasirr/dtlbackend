@@ -13,6 +13,20 @@ export class TransactionService {
     private transactionModel: Model<Transaction>,
   ) {}
 
+  async getAll() {
+    const transactions = await this.transactionModel.find().populate('userId');
+
+    if (!transactions)
+      throw new HttpException('Transactions Not Found', HttpStatus.OK);
+
+    return {
+      data: {
+        transactions,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+
   async getAllByUser(userId: string) {
     if (!userId)
       throw new HttpException(

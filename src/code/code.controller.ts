@@ -13,6 +13,11 @@ export class CodeController {
     return this.codeService.getAll();
   }
 
+  @Get('/availed')
+  getAllAvailedCodes() {
+    return this.codeService.getAllAvailed();
+  }
+
   @Get('/:id')
   GetAllByProduct(@Param('id') productId: string) {
     return this.codeService.getAllByProduct(productId);

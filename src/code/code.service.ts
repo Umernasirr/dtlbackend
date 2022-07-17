@@ -37,6 +37,21 @@ export class CodeService {
     };
   }
 
+  async getAllAvailed() {
+    const availedCodes = await this.codeModel.find({
+      userId: {
+        $ne: null,
+      },
+    });
+
+    return {
+      data: {
+        codes: availedCodes,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+
   async getAllByProduct(productId: string) {
     const codes = await this.codeModel
       .find(
