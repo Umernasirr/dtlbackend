@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CodeService } from './code.service';
 import { AvailCodeDto } from './dto/availCode.dto';
 import { CreateCodeDto } from './dto/createCode.dto';
@@ -9,8 +9,8 @@ export class CodeController {
   constructor(private readonly codeService: CodeService) {}
 
   @Get('')
-  getAll() {
-    return this.codeService.getAll();
+  getAll(@Query() params: any) {
+    return this.codeService.getAll(params.startDate, params.endDate);
   }
 
   @Get('/availed')

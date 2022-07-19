@@ -26,8 +26,17 @@ export class CodeService {
     private readonly transactionModal: Model<Transaction>,
   ) {}
 
-  async getAll() {
-    const codes = await this.codeModel.find();
+  async getAll(startDate: Date, endDate: Date) {
+    const codes = await this.codeModel.find({
+      $and: [
+        {
+          createdAt: { $gte: startDate },
+        },
+        {
+          createdAt: { $lte: endDate },
+        },
+      ],
+    });
 
     return {
       data: {
