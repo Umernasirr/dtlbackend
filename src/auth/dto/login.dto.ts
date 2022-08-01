@@ -1,5 +1,6 @@
 export class LoginDto {
-  client: string;
   phoneNumber: string;
   password: string;
+  client?: string;
+  isAdminPanel?: boolean;
 }

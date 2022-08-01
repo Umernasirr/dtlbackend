@@ -28,15 +28,17 @@ export class AuthService {
       throw new HttpException('Account is not active', HttpStatus.BAD_REQUEST);
     }
 
-    const foundClient = userExists.clients?.find(
-      (item) => item.name.toLowerCase() === client.toLowerCase(),
-    );
-
-    if (!foundClient) {
-      throw new HttpException(
-        'Your account does not belong to this client',
-        HttpStatus.BAD_REQUEST,
+    if (loginDto.isAdminPanel) {
+      const foundClient = userExists.clients?.find(
+        (item) => item.name.toLowerCase() === client?.toLowerCase(),
       );
+
+      if (!foundClient) {
+        throw new HttpException(
+          'Your account does not belong to this client',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     const passwordMatches = bcrypt.compareSync(password, userExists.password);
