@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import bcrypt = require('bcryptjs');
 import UserRole from 'src/common/enums/UserRole';
+import { clientSchemaName } from '../ClientSchema';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -19,27 +20,31 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
 
+    clients: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: clientSchemaName,
+        required: true,
+      },
+    ],
+
     location: {
       type: String,
     },
     mechanic: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
     },
     city: {
       type: String,
-      required: true,
     },
     shopName: {
       type: String,
-      required: true,
     },
     shopAddress: {
       type: String,
-      required: true,
     },
     role: {
       type: String,

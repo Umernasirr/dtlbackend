@@ -10,4 +10,8 @@ export class RegisterDto {
   role?: UserRole;
   email?: string;
   city: string;
+  clients: string[];
+  shopAddress?: string;
+  shopName?: string;
+  type?: string;
 }

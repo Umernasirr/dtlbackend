@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { clientSchemaName } from '../ClientSchema';
 
 const ProductSchema = new mongoose.Schema(
   {
@@ -11,6 +12,11 @@ const ProductSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+    },
+
+    client: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: clientSchemaName,
     },
   },
   {

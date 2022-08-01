@@ -1,15 +1,28 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 import { CreateProductDto } from './dto/createProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly userService: UserService,
+  ) {}
 
   @Get()
-  getAll() {
-    return this.productService.getAll();
+  async getAll(@Query() params: any) {
+    const userData = await this.userService.getUser(params.userId);
+    return this.productService.getAll(userData.data.user.clients ?? []);
   }
 
   @Get('/:id')

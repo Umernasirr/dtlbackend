@@ -26,7 +26,7 @@ export class CodeService {
     private readonly transactionModal: Model<Transaction>,
   ) {}
 
-  async getAll(startDate: Date, endDate: Date) {
+  async getAll(clients: any, startDate: Date, endDate: Date) {
     const codes = await this.codeModel.find({
       $and: [
         {
@@ -38,9 +38,20 @@ export class CodeService {
       ],
     });
 
+    const filteredCodes = codes.filter((code) => {
+      let isFound = false;
+
+      const clientFound = clients.find(
+        (client) => client._id.toString() === code.clientId.toString(),
+      );
+
+      if (clientFound) isFound = true;
+      return isFound;
+    });
+
     return {
       data: {
-        codes,
+        codes: filteredCodes,
       },
       status: HttpStatus.OK,
     };

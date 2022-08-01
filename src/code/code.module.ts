@@ -9,6 +9,7 @@ import TransactionSchema, {
   transactionSchemaName,
 } from 'src/models/TransactionSchema';
 import ProfileSchema, { profileSchemaName } from 'src/models/ProfileSchema';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import ProfileSchema, { profileSchemaName } from 'src/models/ProfileSchema';
     ]),
   ],
   controllers: [CodeController],
-  providers: [CodeService],
+  providers: [CodeService, UserService],
 })
 export class CodeModule {}

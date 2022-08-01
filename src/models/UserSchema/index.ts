@@ -10,6 +10,10 @@ export interface User extends Document {
   status: boolean;
   role: UserRole;
   location: string;
+  clients: {
+    _id: string;
+    name: string;
+  }[];
 }
 
 export const userSchemaName = 'User';
