@@ -58,7 +58,7 @@ export class ProductService {
   }
 
   async createProduct(createProductDto: CreateProductDto) {
-    const { name, price } = createProductDto;
+    const { client, name, price } = createProductDto;
     if (!name) {
       throw new HttpException(
         'Request Body must include name',
@@ -72,8 +72,14 @@ export class ProductService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (!client) {
+      throw new HttpException(
+        'Request Body must include client',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
-    const productExists = await this.productModel.findOne({ name });
+    const productExists = await this.productModel.findOne({ name, client });
     if (productExists) {
       throw new HttpException(
         'Product With Same Name Already Exists',
