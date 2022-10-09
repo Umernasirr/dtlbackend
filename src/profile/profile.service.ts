@@ -102,7 +102,7 @@ export class ProfileService {
     try {
       const updatedProfile = await this.profileModel
         .findByIdAndUpdate(
-          updateBalanceDto.id,
+          updateBalanceDto.profileId,
           {
             balance: updateBalanceDto.balance,
             note: updateBalanceDto.note,
