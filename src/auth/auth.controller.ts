@@ -23,9 +23,13 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    const { phoneNumber, password } = registerDto;
+    const { phoneNumber, password, clients } = registerDto;
     const user = await this.authService.register(registerDto);
-    const token = await this.authService.createToken({ phoneNumber, password });
+    const token = await this.authService.createToken({
+      clients,
+      phoneNumber,
+      password,
+    });
     return {
       data: {
         user: user,

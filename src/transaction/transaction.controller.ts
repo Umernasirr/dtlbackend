@@ -5,6 +5,11 @@ import { TransactionService } from './transaction.service';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
+  @Get('')
+  async getAll() {
+    return await this.transactionService.getAll();
+  }
+
   @Get('/:userId')
   async getAllByUser(@Param('userId') userId: string) {
     return await this.transactionService.getAllByUser(userId);

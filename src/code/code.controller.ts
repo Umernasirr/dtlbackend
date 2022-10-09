@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 import { CodeService } from './code.service';
 import { AvailCodeDto } from './dto/availCode.dto';
 import { CreateCodeDto } from './dto/createCode.dto';
@@ -6,11 +15,29 @@ import { CreateCodeBatchDto } from './dto/createCodeBatch.dto';
 
 @Controller('code')
 export class CodeController {
-  constructor(private readonly codeService: CodeService) {}
+  constructor(
+    private readonly codeService: CodeService,
+    private readonly userService: UserService,
+  ) {}
 
   @Get('')
-  getAll() {
-    return this.codeService.getAll();
+  async getAll(@Query() params: any) {
+    const clientsData = await this.userService.getUser(params.userId);
+
+    if (clientsData.data.user.clients) {
+      return this.codeService.getAll(
+        clientsData.data.user.clients,
+        params.startDate,
+        params.endDate,
+      );
+    } else {
+      return new NotFoundException('Client for user not found');
+    }
+  }
+
+  @Get('/availed')
+  getAllAvailedCodes() {
+    return this.codeService.getAllAvailed();
   }
 
   @Get('/:id')

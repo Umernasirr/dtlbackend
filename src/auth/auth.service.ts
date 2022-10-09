@@ -16,14 +16,29 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const { phoneNumber, password } = loginDto;
-    const userExists = await this.userModel.findOne({ phoneNumber });
+    const { phoneNumber, password, client } = loginDto;
+    const userExists = await this.userModel
+      .findOne({ phoneNumber })
+      .populate('clients');
 
     if (!userExists)
       throw new HttpException('Account not found', HttpStatus.BAD_REQUEST);
 
     if (!userExists.status) {
       throw new HttpException('Account is not active', HttpStatus.BAD_REQUEST);
+    }
+
+    if (loginDto.isAdminPanel) {
+      const foundClient = userExists.clients?.find(
+        (item) => item.name.toLowerCase() === client?.toLowerCase(),
+      );
+
+      if (!foundClient) {
+        throw new HttpException(
+          'Your account does not belong to this client',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     const passwordMatches = bcrypt.compareSync(password, userExists.password);
@@ -35,7 +50,7 @@ export class AuthService {
     }
   }
 
-  async createToken(user: LoginDto) {
+  async createToken(user: any) {
     return this.jwtService.sign(user, {
       expiresIn: '365d',
     });

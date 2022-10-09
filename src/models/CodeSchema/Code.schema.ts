@@ -5,48 +5,56 @@ import { clientSchemaName } from '../ClientSchema';
 import { productSchemaName } from '../ProductSchema';
 import { userSchemaName } from '../UserSchema';
 
-const CodeSchema = new mongoose.Schema({
-  status: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+const CodeSchema = new mongoose.Schema(
+  {
+    status: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
 
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: productSchemaName,
-    required: true,
-  },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: productSchemaName,
+      required: true,
+    },
 
-  codeId: {
-    type: String,
-  },
-  hashedCodeId: {
-    type: String,
-  },
+    codeId: {
+      type: String,
+    },
+    hashedCodeId: {
+      type: String,
+    },
 
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: userSchemaName,
-    default: null,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: userSchemaName,
+      default: null,
+    },
+    clientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: clientSchemaName,
+      required: true,
+    },
   },
-  clientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: clientSchemaName,
-    required: true,
+  {
+    timestamps: true,
   },
-});
+);
 
-CodeSchema.pre('save', async function () {
+CodeSchema.pre('insertMany', function (next, docs) {
   try {
-    const codeId = `${this.clientId}-${this.productId}-${this._id}`;
-    const hashedCodeId = bcrypt.hashSync(codeId, 10);
-
-    this['hashedCodeId'] = hashedCodeId;
-    this['codeId'] = codeId;
+    docs.map((code) => {
+      const codeId = `${code.clientId}-${code.productId}-${code._id}`;
+      const hashedCodeId = bcrypt.hashSync(codeId, 1);
+      code['hashedCodeId'] = hashedCodeId;
+      code['codeId'] = codeId;
+    });
   } catch (e) {
     console.log(e);
   }
+
+  next();
 });
 
 export default CodeSchema;

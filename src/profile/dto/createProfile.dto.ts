@@ -1,4 +1,4 @@
 export class CreateProfileDto {
-  clientId: string;
+  client: string;
   userId: string;
 }

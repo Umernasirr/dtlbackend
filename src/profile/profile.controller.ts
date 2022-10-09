@@ -24,12 +24,12 @@ export class ProfileController {
   }
 
   @Patch('updateBalance')
-  updateBalance(@Body() updateBalanceDto: UpdateBalanceDto) {
-    return this.profileService.updateBalance(updateBalanceDto);
+  async updateBalance(@Body() updateBalanceDto: UpdateBalanceDto) {
+    return await this.profileService.updateBalance(updateBalanceDto);
   }
 
   @Patch('updateStatus')
-  updateStatus(@Body() updateStatusDto: UpdateStatusDto) {
-    return this.profileService.updateStatus(updateStatusDto);
+  async updateStatus(@Body() updateStatusDto: UpdateStatusDto) {
+    return await this.profileService.updateStatus(updateStatusDto);
   }
 }

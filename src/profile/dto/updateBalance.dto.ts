@@ -1,4 +1,5 @@
 export class UpdateBalanceDto {
-  id: string;
+  profileId: string;
   balance: number;
+  note: string;
 }

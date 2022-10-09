@@ -20,7 +20,7 @@ export class ProfileService {
   ) {}
 
   async getAll() {
-    const profiles = await this.profileModel.find();
+    const profiles = await this.profileModel.find().populate('client');
     if (!profiles)
       throw new HttpException('Profiles Not Found', HttpStatus.NO_CONTENT);
 
@@ -39,9 +39,11 @@ export class ProfileService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const profiles = await this.profileModel.find({
-      userId,
-    });
+    const profiles = await this.profileModel
+      .find({
+        userId,
+      })
+      .populate('client');
 
     if (!profiles)
       throw new HttpException('Profiles Not Found', HttpStatus.NO_CONTENT);
@@ -55,10 +57,10 @@ export class ProfileService {
   }
 
   async createProfile(createProfileDto: CreateProfileDto) {
-    const { clientId, userId } = createProfileDto;
-    if (!clientId)
+    const { client, userId } = createProfileDto;
+    if (!client)
       throw new HttpException(
-        'clientId must be provided in body',
+        'client must be provided in body',
         HttpStatus.BAD_REQUEST,
       );
 
@@ -69,7 +71,7 @@ export class ProfileService {
       );
 
     const existingProfile = await this.profileModel.findOne({
-      clientId,
+      client,
       userId,
     });
 
@@ -77,14 +79,16 @@ export class ProfileService {
       throw new ConflictException('Profile already exists');
     }
 
-    const profile = await new this.profileModel({ clientId, userId }).save(); // create new profile
+    const profile = await new this.profileModel({ client, userId }).save(); // create new profile
 
     if (!profile)
       throw new HttpException('Profile Not Created', HttpStatus.NO_CONTENT);
 
-    const profiles = await this.profileModel.find({
-      userId,
-    });
+    const profiles = await this.profileModel
+      .find({
+        userId,
+      })
+      .populate('client');
 
     return {
       data: {
@@ -96,15 +100,18 @@ export class ProfileService {
 
   async updateBalance(updateBalanceDto: UpdateBalanceDto) {
     try {
-      const updatedProfile = await this.profileModel.findByIdAndUpdate(
-        updateBalanceDto.id,
-        {
-          balance: updateBalanceDto.balance,
-        },
-        {
-          new: true,
-        },
-      );
+      const updatedProfile = await this.profileModel
+        .findByIdAndUpdate(
+          updateBalanceDto.profileId,
+          {
+            balance: updateBalanceDto.balance,
+            note: updateBalanceDto.note,
+          },
+          {
+            new: true,
+          },
+        )
+        .populate('client');
       return updatedProfile;
     } catch (e) {
       throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);
@@ -113,15 +120,17 @@ export class ProfileService {
 
   async updateStatus(updateStatusDto: UpdateStatusDto) {
     try {
-      const updatedProfile = await this.profileModel.findByIdAndUpdate(
-        updateStatusDto.id,
-        {
-          status: updateStatusDto.status,
-        },
-        {
-          new: true,
-        },
-      );
+      const updatedProfile = await this.profileModel
+        .findByIdAndUpdate(
+          updateStatusDto.id,
+          {
+            status: updateStatusDto.status,
+          },
+          {
+            new: true,
+          },
+        )
+        .populate('client');
       return updatedProfile;
     } catch (e) {
       throw new HttpException('Product Not Found', HttpStatus.BAD_REQUEST);

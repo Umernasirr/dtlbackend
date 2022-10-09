@@ -16,16 +16,27 @@ export class ProductService {
     private transactionModel: Model<Transaction>,
   ) {}
 
-  async getAll() {
+  async getAll(clients: any) {
     const products = await this.productModel.find();
 
     if (!products) {
       throw new HttpException('Products Not Found', HttpStatus.BAD_REQUEST);
     }
 
+    const filteredProducts = products.filter((product: any) => {
+      let isFound = false;
+
+      const productFound = clients.find((client) => {
+        return client?.toString() === product.client?.toString();
+      });
+
+      if (productFound) isFound = true;
+      return isFound;
+    });
+
     return {
       data: {
-        products,
+        products: filteredProducts,
       },
       status: HttpStatus.OK,
     };

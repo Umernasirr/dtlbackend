@@ -26,12 +26,47 @@ export class CodeService {
     private readonly transactionModal: Model<Transaction>,
   ) {}
 
-  async getAll() {
-    const codes = await this.codeModel.find();
+  async getAll(clients: any, startDate: Date, endDate: Date) {
+    const codes = await this.codeModel.find({
+      $and: [
+        {
+          createdAt: { $gte: startDate },
+        },
+        {
+          createdAt: { $lte: endDate },
+        },
+      ],
+    });
+
+    const filteredCodes = codes.filter((code) => {
+      let isFound = false;
+
+      const clientFound = clients.find(
+        (client) => client._id.toString() === code.clientId.toString(),
+      );
+
+      if (clientFound) isFound = true;
+      return isFound;
+    });
 
     return {
       data: {
-        codes,
+        codes: filteredCodes,
+      },
+      status: HttpStatus.OK,
+    };
+  }
+
+  async getAllAvailed() {
+    const availedCodes = await this.codeModel.find({
+      userId: {
+        $ne: null,
+      },
+    });
+
+    return {
+      data: {
+        codes: availedCodes,
       },
       status: HttpStatus.OK,
     };
@@ -94,9 +129,11 @@ export class CodeService {
 
     for (let i = 0; i < count; i++) {
       const code = new this.codeModel(createCodeDto);
-      const newCode = await code.save();
-      codes.push(newCode);
+      // const newCode = await code.save();
+      codes.push(code);
     }
+
+    const newCodes = await this.codeModel.insertMany(codes);
 
     return {
       data: {
@@ -129,6 +166,19 @@ export class CodeService {
       hashedCodeId: codeId,
     });
 
+    const clientId = code.codeId.split('-')[0];
+
+    const productId = code.codeId.split('-')[1];
+
+    const pf = await this.profileModel.findById(profileId);
+
+    if (pf.client._id.toString() !== clientId) {
+      throw new HttpException(
+        'Code is of the wrong profile',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     if (!code) {
       throw new HttpException('Code not found', HttpStatus.NOT_FOUND);
     }
@@ -149,17 +199,13 @@ export class CodeService {
       },
     );
 
-    const clientId = code.codeId.split('-')[0];
-
-    const productId = code.codeId.split('-')[1];
-
     const product = await this.productModel.findById(productId);
 
     const profile = await this.profileModel.findOne({
       profileId,
     });
 
-    if (profile.clientId.toString() !== clientId)
+    if (profile.client._id.toString() !== clientId)
       throw new HttpException('Client Id does not match', HttpStatus.OK);
 
     const updatedProfile = await this.profileModel.findByIdAndUpdate(
